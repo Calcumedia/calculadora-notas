@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Calculadora de Nota Media Ponderada y ECTS</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: {
+                        brand: { 50: '#f5f7ff', 100: '#ebf0fe', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca' },
+                        amazon: '#FF9900',
+                    },
+                    borderRadius: { '4xl': '2rem' }
+                }
+            }
+        }
+    </script>
+    <style>
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { 0% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: translateY(0); } }
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+    </style>
+</head>
+<body class="bg-brand-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans min-h-screen transition-colors duration-300 pb-32 md:pb-0">
+
+    <div class="container mx-auto px-4 py-6 md:py-12 max-w-4xl relative">
+        
+        <div class="flex justify-end gap-3 mb-8">
+            <select id="lang-selector" onchange="changeLanguage()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-base md:text-sm font-semibold shadow-sm outline-none cursor-pointer transition">
+                <option value="es">🇪🇸 ES</option>
+                <option value="en">🇺🇸 EN</option>
+            </select>
+            <button onclick="toggleDarkMode()" class="p-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition">
+                <span id="dark-icon" class="text-lg">🌙</span>
+            </button>
+        </div>
+
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-950 dark:text-white tracking-tighter mb-3">
+                <span id="txt-title-1">Calculadora de Nota</span> <span class="text-brand-600 dark:text-brand-400" id="txt-title-2">Media</span>
+            </h1>
+            <p class="text-lg text-slate-600 dark:text-slate-400 max-w-xl mx-auto font-medium" id="txt-subtitle">
+                Ponderada Universitaria, Equivalencia Erasmus y Créditos ECTS.
+            </p>
+        </header>
+
+        <main>
+            <div id="sticky-score" class="sticky top-0 md:top-4 z-[999] mb-8 p-3 md:p-8 bg-slate-50/95 dark:bg-slate-800/95 backdrop-blur-md rounded-b-2xl md:rounded-3xl md:border border-b border-x border-slate-200 dark:border-slate-700 shadow-xl md:shadow-2xl transition-all">
+                
+                <div class="flex items-center justify-between md:grid md:grid-cols-2 md:gap-8">
+                    <div class="flex-1 text-center border-r border-slate-200 dark:border-slate-700 px-1 md:pr-8">
+                        <p class="text-[8px] md:text-sm font-semibold text-slate-500 uppercase tracking-wider mb-0.5 md:mb-2 line-clamp-1" id="txt-label-weighted">Nota Media Ponderada</p>
+                        <div class="relative inline-block">
+                            <span id="final-grade" class="text-4xl md:text-7xl font-extrabold text-brand-600 dark:text-brand-400 tracking-tighter">10.00</span>
+                            <span class="text-[10px] md:text-xl font-bold text-slate-400 absolute bottom-0.5 md:-bottom-1 left-full ml-0.5 md:ml-1.5">/10</span>
+                        </div>
+                        <p class="text-[7px] md:text-xs text-slate-400 mt-0.5 md:mt-2 line-clamp-1"><span id="txt-based-on">Basado en</span> <span id="total-credits-display">0</span> <span id="txt-total-ects">créditos ECTS totales.</span></p>
+                    </div>
+                    
+                    <div class="flex-1 text-center px-1 md:pl-8">
+                        <p class="text-[8px] md:text-sm font-semibold text-slate-500 uppercase tracking-wider mb-0.5 md:mb-2 line-clamp-1" id="txt-label-erasmus">Equivalencia Erasmus (ECTS)</p>
+                        <span id="ects-equivalent" class="text-4xl md:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tighter">A</span>
+                        <p id="ects-desc" class="text-[7px] md:text-sm text-slate-600 dark:text-slate-400 mt-0.5 md:mt-1 font-medium line-clamp-1">Excelente / Notable Alto</p>
+                    </div>
+                </div>
+
+                <div class="text-center pt-2 mt-2 md:pt-5 md:mt-6 border-t border-slate-200 dark:border-slate-700 transition-all">
+                    <p id="motivational-msg" class="text-xs md:text-lg font-extrabold text-brand-600 dark:text-brand-400 fade-in">¡Introduce tus notas para empezar! 🚀</p>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-900 p-5 md:p-10 rounded-4xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 mb-10 relative">
+                
+                <div class="flex flex-col sm:flex-row gap-4 mb-10">
+                    <button onclick="addRow()" class="flex-grow flex items-center justify-center gap-2 bg-brand-600 text-white font-semibold px-6 py-3.5 rounded-xl shadow-md hover:bg-brand-700 transition active:scale-95" id="btn-add">Añadir Asignatura</button>
+                    <button onclick="copySummary()" class="flex items-center justify-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold px-6 py-3.5 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition" id="btn-copy">Copiar Resumen</button>
+                    <button onclick="clearAll()" class="flex items-center justify-center gap-2 bg-white dark:bg-slate-900 text-rose-600 font-semibold px-6 py-3.5 rounded-xl border border-rose-200 dark:border-rose-900/50 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition" id="btn-clear">Limpiar Todo</button>
+                </div>
+
+                <div class="grid grid-cols-[1fr,65px,60px,35px] md:grid-cols-[1fr,85px,80px,40px] gap-2 md:gap-3 px-4 mb-2 text-[10px] md:text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+                    <div id="head-asig">Asignatura</div>
+                    <div class="text-center" id="head-nota">Nota</div>
+                    <div class="text-center" id="head-ects">ECTS</div>
+                    <div></div>
+                </div>
+
+                <div id="rows-container" class="space-y-3"></div>
+            </div>
+
+            <div class="fade-in bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-lg border border-slate-100 dark:border-slate-800 flex flex-col md:flex-row items-center gap-6 mb-12">
+                <div class="bg-amazon/10 p-4 rounded-2xl text-4xl">🎁</div>
+                <div class="flex-grow text-center md:text-left">
+                    <p class="text-xs font-bold text-amazon uppercase tracking-widest mb-1" id="txt-amazon-tag">Regalo exclusivo universitario</p>
+                    <h3 class="text-xl font-bold text-slate-950 dark:text-white mb-1" id="txt-amazon-title">6 meses GRATIS de Amazon Prime Student</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm" id="txt-amazon-desc">Envíos rápidos gratis para folios, libros, apuntes y Prime Video.</p>
+                </div>
+                <a href="http://www.amazon.es/joinstudent?tag=calcumedia-21" target="_blank" class="w-full md:w-auto text-center bg-amazon text-slate-950 font-bold px-8 py-3.5 rounded-xl hover:brightness-105 transition" id="btn-amazon">Reclamar mi regalo</a>
+            </div>
+
+            <section class="max-w-3xl mx-auto px-4 mt-16 mb-8">
+                <h2 class="text-2xl font-bold text-slate-800 dark:text-slate-200 mb-8 text-center" id="txt-faq-title">Preguntas Frecuentes</h2>
+                <div class="space-y-4">
+                    <details class="group bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 cursor-pointer">
+                        <summary class="flex justify-between items-center font-bold text-slate-800 dark:text-slate-100 text-lg">
+                            <span id="faq-q3">¿Para quién es esta herramienta y qué soluciona?</span>
+                            <span class="transition group-open:rotate-180">▼</span>
+                        </summary>
+                        <p class="text-slate-600 dark:text-slate-400 mt-4 leading-relaxed text-sm md:text-base" id="faq-a3">
+                            Está diseñada para aliviar el caos del cálculo manual en tres situaciones críticas: para quienes necesitan su nota exacta para becas MEC o másteres, para estudiantes compitiendo por un destino Erasmus, y para alumnos extranjeros que necesitan traducir sus notas españolas al sistema europeo de letras de forma instantánea y sin errores.
+                        </p>
+                    </details>
+                    <details class="group bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 cursor-pointer">
+                        <summary class="flex justify-between items-center font-semibold text-slate-800 dark:text-slate-100 text-lg">
+                            <span id="faq-q1">¿Qué es la nota media ponderada?</span>
+                            <span class="transition group-open:rotate-180">▼</span>
+                        </summary>
+                        <p class="text-slate-600 dark:text-slate-400 mt-4 leading-relaxed text-sm md:text-base" id="faq-a1">
+                            A diferencia de una media simple, aquí cada asignatura tiene un "peso" distinto según sus créditos. Nuestra calculadora multiplica cada nota por sus ECTS para darte el resultado real que exige tu universidad.
+                        </p>
+                    </details>
+                    <details class="group bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 cursor-pointer">
+                        <summary class="flex justify-between items-center font-semibold text-slate-800 dark:text-slate-100 text-lg">
+                            <span id="faq-q2">¿Cómo funcionan las equivalencias ECTS?</span>
+                            <span class="transition group-open:rotate-180">▼</span>
+                        </summary>
+                        <p class="text-slate-600 dark:text-slate-400 mt-4 leading-relaxed text-sm md:text-base" id="faq-a2">
+                            Es el sistema de letras usado en toda Europa para facilitar la movilidad. Traducimos tu nota de 0-10 a la escala A (Excelente), B (Notable Alto), C (Notable), D (Aprobado Alto), E (Suficiente) y F (Suspenso).
+                        </p>
+                    </details>
+                </div>
+            </section>
+        </main>
+
+        <footer class="mt-12 text-center text-slate-400 text-sm pb-10">
+            <p id="txt-footer">© 2026 CalcuMedia Uni. Herramienta gratuita para estudiantes.</p>
+        </footer>
+    </div>
+
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" id="btn-scroll-top" class="md:hidden fixed bottom-6 right-6 bg-slate-900 dark:bg-brand-600 text-white px-5 py-3 rounded-full shadow-2xl z-[99999] transition-all duration-300 opacity-0 pointer-events-none font-bold flex items-center gap-2 border border-white/20 hover:brightness-110 active:scale-95 active:bg-brand-700">
+        <span class="text-lg">⬆️</span> Ver Nota
+    </button>
+
+    <script>
+        let rowCount = 0;
+        let currentLang = 'es';
+        
+        let hasCelebratedNormal = false;
+        let hasCelebratedMega = false;
+
+        const i18n = {
+            es: {
+                title1: "Calculadora de Nota", title2: "Media", subtitle: "Ponderada Universitaria, Equivalencia Erasmus y Créditos ECTS.",
+                labelWeighted: "Nota Media Ponderada", basedOn: "Basado en", totalEcts: "créditos ECTS totales.",
+                labelErasmus: "Equivalencia Erasmus (ECTS)", btnAdd: "Añadir Asignatura", btnCopy: "Copiar Resumen",
+                btnClear: "Limpiar Todo", amazonTag: "Regalo exclusivo universitario",
+                amazonTitle: "6 meses GRATIS de Amazon Prime Student", amazonDesc: "Envíos rápidos gratis para folios, libros, apuntes y Prime Video.",
+                btnAmazon: "Reclamar mi regalo", footer: "© 2026 CalcuMedia Uni. Herramienta gratuita para estudiantes.",
+                headAsig: "Asignatura", headNota: "Nota", headEcts: "ECTS",
+                placeholderAsig: "Ej: Estadística", placeholderNota: "0.0", placeholderEcts: "6", copied: "¡Resumen copiado!",
+                faqTitle: "Preguntas Frecuentes", 
+                faqQ1: "¿Qué es la nota media ponderada?", faqA1: "A diferencia de una media simple, aquí cada asignatura tiene un 'peso' distinto según sus créditos. Nuestra calculadora multiplica cada nota por sus ECTS para darte el resultado real que exige tu universidad.",
+                faqQ2: "¿Cómo funcionan las equivalencias ECTS?", faqA2: "Es el sistema de letras usado en toda Europa para facilitar la movilidad. Traducimos tu nota de 0-10 a la escala A (Excelente), B (Notable Alto), C (Notable), D (Aprobado Alto), E (Suficiente) y F (Suspenso).",
+                faqQ3: "¿Para quién es esta herramienta y qué soluciona?", faqA3: "Está diseñada para aliviar el caos del cálculo manual en tres situaciones críticas: para quienes necesitan su nota exacta para becas MEC o másteres, para estudiantes compitiendo por un destino Erasmus, y para alumnos extranjeros que necesitan traducir sus notas españolas al sistema europeo de letras de forma instantánea y sin errores.",
+                msgInit: "¡Introduce tus notas para empezar! 🚀",
+                msg9: "¡Matrícula de honor! Eres una máquina. 🏆",
+                msg7: "¡Súper bien! Vas por un camino excelente. 🌟",
+                msg5: "¡Aprobado sólido! Sigue dándole caña, tú puedes. 💪",
+                msg0: "¡Mucho ánimo! Cada esfuerzo suma, no te rindas. 🌱"
+            },
+            en: {
+                title1: "GPA", title2: "Calculator", subtitle: "Weighted Average, Erasmus Equivalence and ECTS Credits.",
+                labelWeighted: "Weighted GPA", basedOn: "Based on", totalEcts: "total ECTS credits.",
+                labelErasmus: "Erasmus Equivalence (ECTS)", btnAdd: "Add Subject", btnCopy: "Copy Summary",
+                btnClear: "Clear All", amazonTag: "Exclusive Student Gift",
+                amazonTitle: "6 months FREE of Amazon Prime Student", amazonDesc: "Free shipping for books, supplies and Prime Video.",
+                btnAmazon: "Claim my gift", footer: "© 2026 CalcuMedia Uni. Free tool for students.",
+                headAsig: "Subject", headNota: "Grade", headEcts: "ECTS",
+                placeholderAsig: "e.g. Math", placeholderNota: "0.0", placeholderEcts: "6", copied: "Summary copied!",
+                faqTitle: "Frequently Asked Questions",
+                faqQ1: "What is the weighted average grade?", faqA1: "Unlike a simple average, here each subject has a different 'weight' based on its credits. Our calculator multiplies each grade by its ECTS to give you the real result your university requires.",
+                faqQ2: "How do ECTS equivalencies work?", faqA2: "It is the letter system used throughout Europe to facilitate mobility. We translate your 0-10 grade into the scale A (Excellent), B (Very Good), C (Good), D (Satisfactory), E (Sufficient) and F (Fail).",
+                faqQ3: "Who is this tool for and what does it solve?", faqA3: "It is designed to relieve manual calculation chaos in three critical situations: for those who need their exact grade for grants or Masters, for students competing for an Erasmus spot, and for international students who need to translate their Spanish grades to the European letter system.",
+                msgInit: "Enter your grades to start! 🚀",
+                msg9: "Outstanding! You're crushing it. 🏆",
+                msg7: "Great job! You are on an excellent path. 🌟",
+                msg5: "Solid pass! Keep pushing, you got this. 💪",
+                msg0: "Keep your head up! Every effort counts. 🌱"
+            }
+        };
+
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+            document.getElementById('dark-icon').innerText = document.documentElement.classList.contains('dark') ? '☀️' : '🌙';
+        }
+
+        function changeLanguage() {
+            currentLang = document.getElementById('lang-selector').value;
+            const t = i18n[currentLang];
+            document.getElementById('txt-title-1').innerText = t.title1;
+            document.getElementById('txt-title-2').innerText = t.title2;
+            document.getElementById('txt-subtitle').innerText = t.subtitle;
+            document.getElementById('txt-label-weighted').innerText = t.labelWeighted;
+            document.getElementById('txt-based-on').innerText = t.basedOn;
+            document.getElementById('txt-total-ects').innerText = t.totalEcts;
+            document.getElementById('txt-label-erasmus').innerText = t.labelErasmus;
+            document.getElementById('btn-add').innerText = t.btnAdd;
+            document.getElementById('btn-copy').innerText = t.btnCopy;
+            document.getElementById('btn-clear').innerText = t.btnClear;
+            document.getElementById('txt-amazon-tag').innerText = t.amazonTag;
+            document.getElementById('txt-amazon-title').innerText = t.amazonTitle;
+            document.getElementById('txt-amazon-desc').innerText = t.amazonDesc;
+            document.getElementById('btn-amazon').innerText = t.btnAmazon;
+            document.getElementById('txt-footer').innerText = t.footer;
+            document.getElementById('head-asig').innerText = t.headAsig;
+            document.getElementById('head-nota').innerText = t.headNota;
+            document.getElementById('head-ects').innerText = t.headEcts;
+            document.getElementById('txt-faq-title').innerText = t.faqTitle;
+            document.getElementById('faq-q1').innerText = t.faqQ1;
+            document.getElementById('faq-a1').innerText = t.faqA1;
+            document.getElementById('faq-q2').innerText = t.faqQ2;
+            document.getElementById('faq-a2').innerText = t.faqA2;
+            document.getElementById('faq-q3').innerText = t.faqQ3;
+            document.getElementById('faq-a3').innerText = t.faqA3;
+            calculate();
+        }
+
+        function addRow() {
+            rowCount++;
+            const t = i18n[currentLang];
+            const container = document.getElementById('rows-container');
+            const rowHtml = `
+                <div id="row-${rowCount}" class="grid grid-cols-[1fr,65px,60px,35px] md:grid-cols-[1fr,85px,80px,40px] gap-2 md:gap-3 bg-white dark:bg-slate-900 p-2 md:p-3 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm fade-in items-center">
+                    <input type="text" placeholder="${t.placeholderAsig}" class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-base md:text-sm dark:text-white outline-none focus:ring-2 focus:ring-brand-500">
+                    <input type="number" step="0.01" oninput="calculate()" class="nota w-full px-1 py-2.5 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-center font-bold text-brand-600 dark:text-brand-400 text-base md:text-lg outline-none focus:ring-2 focus:ring-brand-500" placeholder="0.0">
+                    <input type="number" step="0.5" oninput="calculate()" class="ects w-full px-1 py-2.5 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-center text-slate-700 dark:text-slate-300 font-medium text-base outline-none focus:ring-2 focus:ring-brand-500" placeholder="6">
+                    <button onclick="removeRow(${rowCount})" class="text-rose-300 hover:text-rose-500 transition justify-self-center text-xl">×</button>
+                </div>`;
+            container.insertAdjacentHTML('beforeend', rowHtml);
+        }
+
+        function removeRow(id) { document.getElementById(`row-${id}`).remove(); calculate(); }
+        
+        function clearAll() { 
+            document.getElementById('rows-container').innerHTML = ''; 
+            hasCelebratedNormal = false;
+            hasCelebratedMega = false;
+            calculate(); 
+            window.scrollTo({top: 0, behavior: 'smooth'}); 
+        }
+
+        // MOTOR DE CONFETI ACTUALIZADO PARA EXPLOSIÓN TOTAL DESDE EL CENTRO
+        function fireConfetti(type) {
+            if (typeof confetti === 'function') {
+                if (type === 'mega') {
+                    // COLORES VIP: Oro y Azul oscuro
+                    const megaColors = ['#F59E0B', '#D97706', '#1E3A8A', '#0F172A'];
+                    
+                    // Doble ráfaga para efecto súper denso
+                    // Ráfaga 1: Explosión central circular masiva
+                    confetti({
+                        particleCount: 400,
+                        angle: 90, // Dirección base irrelevante con spread 360
+                        spread: 360, // Círculo completo (Big Bang)
+                        origin: { x: 0.5, y: 0.5 }, // Centro exacto de la pantalla
+                        colors: megaColors,
+                        zIndex: 99999,
+                        startVelocity: 45, // Velocidad masiva para cubrir todo
+                        gravity: 0.8, // Caen un poco más lento
+                        drift: 0,
+                        ticks: 300 // Duran más en pantalla
+                    });
+                    
+                    // Ráfaga 2: Un "pum" extra con partículas más grandes
+                    setTimeout(() => {
+                        confetti({
+                            particleCount: 150,
+                            angle: 90,
+                            spread: 360,
+                            origin: { x: 0.5, y: 0.5 },
+                            colors: ['#FFFFFF', ...megaColors], // Añadimos blanco para brillo
+                            zIndex: 99999,
+                            startVelocity: 55,
+                            gravity: 0.9,
+                            scalar: 1.2, // Partículas más grandes
+                            ticks: 200
+                        });
+                    }, 150);
+
+                } else {
+                    // Confeti corporativo estándar (7.0 - 8.9)
+                    // Explosión circular desde el centro para cobertura total
+                    confetti({
+                        particleCount: 200,
+                        angle: 90,
+                        spread: 360, // Big Bang completo
+                        origin: { x: 0.5, y: 0.5 }, // Centro exacto
+                        colors: ['#4f46e5', '#14b8a6', '#f59e0b'],
+                        zIndex: 99999,
+                        startVelocity: 40,
+                        gravity: 1,
+                        ticks: 250
+                    });
+                }
+            }
+        }
+
+        function calculate() {
+            const notas = document.querySelectorAll('.nota'), ects = document.querySelectorAll('.ects');
+            let tw = 0, te = 0, valid = false;
+            notas.forEach((n, i) => {
+                const nv = parseFloat(n.value), ev = parseFloat(ects[i].value) || 0;
+                if (!isNaN(nv) && ev > 0) { tw += nv * ev; te += ev; valid = true; }
+            });
+            const grade = valid ? (tw / te).toFixed(2) : "10.00";
+            document.getElementById('final-grade').innerText = grade;
+            document.getElementById('total-credits-display').innerText = valid ? te : "0";
+            updateErasmus(parseFloat(grade), valid);
+        }
+
+        function updateErasmus(g, valid) {
+            const t = i18n[currentLang];
+            let letter = "A", desc = currentLang === 'es' ? "Excelente / Notable Alto" : "Excellent / Very Good";
+            let motivationMsg = t.msgInit;
+
+            if (valid) {
+                if (g < 9) { letter = "B"; desc = currentLang === 'es' ? "Notable / Muy Bien" : "Very Good / Good"; }
+                if (g < 8) { letter = "C"; desc = currentLang === 'es' ? "Bien / Notable Bajo" : "Good / Satisfactory"; }
+                if (g < 7) { letter = "D"; desc = currentLang === 'es' ? "Suficiente / Bien" : "Satisfactory / Sufficient"; }
+                if (g < 6) { letter = "E"; desc = currentLang === 'es' ? "Aprobado / Suficiente" : "Sufficient / Pass"; }
+                if (g < 5) { letter = "F"; desc = currentLang === 'es' ? "Suspenso" : "Fail"; }
+                
+                if (g >= 9.0) { motivationMsg = t.msg9; }
+                else if (g >= 7.0) { motivationMsg = t.msg7; }
+                else if (g >= 5.0) { motivationMsg = t.msg5; }
+                else { motivationMsg = t.msg0; }
+
+                if (g >= 9.0 && !hasCelebratedMega) {
+                    fireConfetti('mega');
+                    hasCelebratedMega = true;
+                    hasCelebratedNormal = true;
+                } else if (g >= 7.0 && g < 9.0 && !hasCelebratedNormal) {
+                    fireConfetti('normal');
+                    hasCelebratedNormal = true;
+                    hasCelebratedMega = false;
+                } else if (g < 7.0) {
+                    hasCelebratedNormal = false;
+                    hasCelebratedMega = false;
+                }
+            } else {
+                hasCelebratedNormal = false;
+                hasCelebratedMega = false;
+            }
+
+            document.getElementById('ects-equivalent').innerText = letter;
+            document.getElementById('ects-desc').innerText = desc;
+            document.getElementById('motivational-msg').innerText = motivationMsg;
+        }
+
+        function copySummary() {
+            const grade = document.getElementById('final-grade').innerText;
+            const letter = document.getElementById('ects-equivalent').innerText;
+            const text = `📊 Mi Media: ${grade}/10\nEquivalencia ECTS: ${letter}\nCalculado en CalcuMedia Uni.`;
+            navigator.clipboard.writeText(text).then(() => alert(i18n[currentLang].copied));
+        }
+
+        // LÓGICA DE VISIBILIDAD INTELIGENTE DEL BOTÓN FLOTANTE
+        let isInputFocused = false;
+        const fab = document.getElementById('btn-scroll-top');
+
+        function updateFabVisibility() {
+            if (window.scrollY > 50 || isInputFocused) {
+                fab.classList.remove('opacity-0', 'pointer-events-none');
+                fab.classList.add('opacity-100');
+            } else {
+                fab.classList.add('opacity-0', 'pointer-events-none');
+                fab.classList.remove('opacity-100');
+            }
+        }
+
+        window.addEventListener('scroll', updateFabVisibility);
+
+        document.addEventListener('focusin', (e) => {
+            if (e.target.tagName === 'INPUT') {
+                isInputFocused = true;
+                updateFabVisibility();
+            }
+        });
+
+        document.addEventListener('focusout', (e) => {
+            if (e.target.tagName === 'INPUT') {
+                isInputFocused = false;
+                setTimeout(updateFabVisibility, 200); 
+            }
+        });
+
+        addRow(); addRow();
+    </script>
+</body>
+</html>
