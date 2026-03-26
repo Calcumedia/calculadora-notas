@@ -6,11 +6,17 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-4ZYZW05BZ1');
     </script>
-<meta name="description" content="Calcula tu nota media universitaria, equivalencia Erasmus y ECTS al instante. Herramienta gratuita para estudiantes.">
-    
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Calculadora de Nota Media Universitaria y ECTS | CalcuMedia Uni</title>
+    <meta name="description" content="Calcula tu nota media universitaria, equivalencia Erasmus y ECTS al instante. Herramienta gratuita para estudiantes.">
+    <link rel="canonical" href="https://calcumedia.github.io/calculadora-notas/">
+    <meta name="robots" content="index, follow">
+
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://calcumedia.github.io/calculadora-notas/">
     <meta property="og:title" content="🎓 Calculadora de Nota Media Universitaria">
@@ -22,16 +28,64 @@
     <meta name="twitter:title" content="🎓 Calculadora de Nota Media Universitaria">
     <meta name="twitter:description" content="Calcula tu nota ponderada exacta, descubre tu equivalencia Erasmus al instante y copia el resumen. 100% gratis.">
     <meta name="twitter:image" content="https://calcumedia.github.io/calculadora-notas/portada.jpeg">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Calculadora de Nota Media Ponderada y ECTS</title>
+
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Calculadora de Nota Media Universitaria",
+      "url": "https://calcumedia.github.io/calculadora-notas/",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Any",
+      "description": "Calcula tu nota media ponderada universitaria, equivalencia Erasmus y créditos ECTS gratis.",
+      "inLanguage": "es",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "EUR"
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Qué es la nota media ponderada?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A diferencia de una media simple, cada asignatura tiene un peso distinto según sus créditos ECTS."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Cómo funcionan las equivalencias ECTS?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La equivalencia ECTS traduce tu nota a una escala de letras usada en Europa para movilidad académica."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Para quién es esta herramienta y qué soluciona?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sirve para estudiantes que necesitan calcular su nota media exacta para becas, máster, Erasmus o equivalencias."
+          }
+        }
+      ]
+    }
+    </script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <script>
@@ -133,6 +187,52 @@
                 <a href="http://www.amazon.es/joinstudent?tag=calcumedia-21" target="_blank" onclick="registrarEvento('clic_amazon')" class="w-full md:w-auto text-center bg-amazon text-slate-950 font-bold px-8 py-3.5 rounded-xl hover:brightness-105 transition" id="btn-amazon">Reclamar mi regalo</a>
             </div>
 
+            <div class="fade-in bg-gradient-to-r from-brand-600 to-brand-700 text-white p-8 rounded-3xl shadow-lg mb-12">
+                <div class="flex flex-col md:flex-row items-center gap-6">
+                    <div class="text-4xl">📝</div>
+                    <div class="flex-grow text-center md:text-left">
+                        <p class="text-xs font-bold uppercase tracking-widest text-white/80 mb-1">Herramienta recomendada</p>
+                        <h3 class="text-2xl font-extrabold mb-2">¿También necesitas hacer citas para tu TFG o TFM?</h3>
+                        <p class="text-white/90 text-sm md:text-base">
+                            Usa nuestro generador APA 7 automático para crear citas y referencias bibliográficas en segundos.
+                        </p>
+                    </div>
+                    <a href="https://calcumedia.github.io/generador-apa/" target="_blank" onclick="registrarEvento('clic_herramienta_apa')" class="w-full md:w-auto text-center bg-white text-brand-700 font-bold px-8 py-3.5 rounded-xl hover:bg-slate-100 transition">
+                        Probar generador APA 7
+                    </a>
+                </div>
+            </div>
+
+            <section class="max-w-3xl mx-auto px-4 mt-8 mb-12">
+                <div class="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-sm border border-slate-100 dark:border-slate-800">
+                    <h2 class="text-2xl font-bold text-slate-800 dark:text-slate-200 mb-6">
+                        Cómo calcular tu nota media universitaria correctamente
+                    </h2>
+
+                    <div class="space-y-4 text-slate-600 dark:text-slate-400 leading-relaxed text-sm md:text-base">
+                        <p>
+                            Esta calculadora de nota media universitaria te permite obtener tu media ponderada exacta teniendo en cuenta los créditos ECTS de cada asignatura. No es lo mismo una media simple que una media ponderada: en la ponderada, las asignaturas con más créditos tienen más peso en el resultado final.
+                        </p>
+
+                        <p>
+                            Es especialmente útil si necesitas calcular tu expediente para becas, procesos de movilidad Erasmus, acceso a máster, oposiciones o cualquier trámite académico donde te pidan la nota media oficial o una equivalencia aproximada al sistema ECTS.
+                        </p>
+
+                        <p>
+                            Solo tienes que introducir la nota obtenida en cada asignatura y sus créditos. La herramienta multiplica automáticamente cada nota por sus ECTS, suma todos los resultados y divide entre el total de créditos introducidos. Así obtienes una nota media más realista que una media aritmética simple.
+                        </p>
+
+                        <p>
+                            Además, esta calculadora traduce tu resultado a una equivalencia Erasmus orientativa usando letras como A, B, C, D, E y F. Esto puede ayudarte a entender mejor cómo se interpreta tu rendimiento académico en contextos europeos.
+                        </p>
+
+                        <p>
+                            Aunque esta herramienta es muy útil para orientarte, conviene revisar siempre la normativa específica de tu universidad, ya que algunas instituciones pueden aplicar criterios propios en el cálculo final del expediente.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
             <section class="max-w-3xl mx-auto px-4 mt-16 mb-8">
                 <h2 class="text-2xl font-bold text-slate-800 dark:text-slate-200 mb-8 text-center" id="txt-faq-title">Preguntas Frecuentes</h2>
                 <div class="space-y-4">
@@ -172,7 +272,7 @@
         </footer>
     </div>
 
-    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" id="btn-scroll-top" class="md:hidden fixed bottom-6 right-6 bg-slate-900 dark:bg-brand-600 text-white px-5 py-3 rounded-full shadow-2xl z-[99999] transition-all duration-300 opacity-0 pointer-events-none font-bold flex items-center gap-2 border border-white/20 hover:brightness-110 active:scale-95 active:bg-brand-700">
+    <button onclick="registrarEvento('scroll_to_top'); window.scrollTo({top: 0, behavior: 'smooth'})" id="btn-scroll-top" class="md:hidden fixed bottom-6 right-6 bg-slate-900 dark:bg-brand-600 text-white px-5 py-3 rounded-full shadow-2xl z-[99999] transition-all duration-300 opacity-0 pointer-events-none font-bold flex items-center gap-2 border border-white/20 hover:brightness-110 active:scale-95 active:bg-brand-700">
         <span class="text-lg">⬆️</span> Ver Nota
     </button>
 
@@ -182,8 +282,8 @@
         
         let hasCelebratedNormal = false;
         let hasCelebratedMega = false;
+        let yaRegistroPrimerCalculo = false;
 
-        // SISTEMA DE ENVÍO DE EVENTOS A GOOGLE
         function registrarEvento(nombreDelEvento) {
             if (typeof gtag === 'function') {
                 gtag('event', nombreDelEvento);
@@ -234,9 +334,11 @@
         function toggleDarkMode() {
             document.documentElement.classList.toggle('dark');
             document.getElementById('dark-icon').innerText = document.documentElement.classList.contains('dark') ? '☀️' : '🌙';
+            registrarEvento('toggle_dark_mode');
         }
 
         function changeLanguage() {
+            registrarEvento('change_language');
             currentLang = document.getElementById('lang-selector').value;
             const t = i18n[currentLang];
             document.getElementById('txt-title-1').innerText = t.title1;
@@ -269,14 +371,17 @@
 
         function addRow() {
             rowCount++;
+            registrarEvento('add_subject');
+
             const t = i18n[currentLang];
             const container = document.getElementById('rows-container');
-            if (!container) return; // Evita bloqueos si no encuentra el contenedor
+            if (!container) return;
+
             const rowHtml = `
                 <div id="row-${rowCount}" class="grid grid-cols-[1fr,65px,60px,35px] md:grid-cols-[1fr,85px,80px,40px] gap-2 md:gap-3 bg-white dark:bg-slate-900 p-2 md:p-3 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm fade-in items-center">
                     <input type="text" placeholder="${t.placeholderAsig}" class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-base md:text-sm dark:text-white outline-none focus:ring-2 focus:ring-brand-500">
-                    <input type="number" step="0.01" oninput="calculate()" class="nota w-full px-1 py-2.5 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-center font-bold text-brand-600 dark:text-brand-400 text-base md:text-lg outline-none focus:ring-2 focus:ring-brand-500" placeholder="0.0">
-                    <input type="number" step="0.5" oninput="calculate()" class="ects w-full px-1 py-2.5 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-center text-slate-700 dark:text-slate-300 font-medium text-base outline-none focus:ring-2 focus:ring-brand-500" placeholder="6">
+                    <input type="number" step="0.01" inputmode="decimal" oninput="calculate()" class="nota w-full px-1 py-2.5 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-center font-bold text-brand-600 dark:text-brand-400 text-base md:text-lg outline-none focus:ring-2 focus:ring-brand-500" placeholder="0.0">
+                    <input type="number" step="0.5" inputmode="numeric" oninput="calculate()" class="ects w-full px-1 py-2.5 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-center text-slate-700 dark:text-slate-300 font-medium text-base outline-none focus:ring-2 focus:ring-brand-500" placeholder="6">
                     <button onclick="removeRow(${rowCount})" class="text-rose-300 hover:text-rose-500 transition justify-self-center text-xl">×</button>
                 </div>`;
             container.insertAdjacentHTML('beforeend', rowHtml);
@@ -284,15 +389,20 @@
 
         function removeRow(id) { 
             const row = document.getElementById(`row-${id}`);
-            if(row) row.remove(); 
+            if (row) {
+                row.remove();
+                registrarEvento('remove_subject');
+            }
             calculate(); 
         }
         
         function clearAll() { 
             const container = document.getElementById('rows-container');
-            if(container) container.innerHTML = ''; 
+            if (container) container.innerHTML = ''; 
             hasCelebratedNormal = false;
             hasCelebratedMega = false;
+            yaRegistroPrimerCalculo = false;
+            registrarEvento('clear_all');
             calculate(); 
             window.scrollTo({top: 0, behavior: 'smooth'}); 
         }
@@ -323,16 +433,31 @@
         function calculate() {
             const notas = document.querySelectorAll('.nota'), ects = document.querySelectorAll('.ects');
             let tw = 0, te = 0, valid = false;
+
             notas.forEach((n, i) => {
                 const nv = parseFloat(n.value), ev = parseFloat(ects[i].value) || 0;
-                if (!isNaN(nv) && ev > 0) { tw += nv * ev; te += ev; valid = true; }
+                if (!isNaN(nv) && ev > 0) {
+                    tw += nv * ev;
+                    te += ev;
+                    valid = true;
+                }
             });
+
             const grade = valid ? (tw / te).toFixed(2) : "10.00";
             
             const gradeEl = document.getElementById('final-grade');
             const totalEl = document.getElementById('total-credits-display');
-            if(gradeEl) gradeEl.innerText = grade;
-            if(totalEl) totalEl.innerText = valid ? te : "0";
+            if (gradeEl) gradeEl.innerText = grade;
+            if (totalEl) totalEl.innerText = valid ? te : "0";
+
+            if (valid && !yaRegistroPrimerCalculo) {
+                registrarEvento('usar_calculadora');
+                yaRegistroPrimerCalculo = true;
+            }
+
+            if (valid) {
+                registrarEvento('resultado_calculado');
+            }
             
             updateErasmus(parseFloat(grade), valid);
         }
@@ -358,7 +483,6 @@
                     fireConfetti('mega');
                     hasCelebratedMega = true;
                     hasCelebratedNormal = true;
-                    // SENSOR INYECTADO: logro_sobresaliente
                     registrarEvento('logro_sobresaliente');
                 } else if (g >= 7.0 && g < 9.0 && !hasCelebratedNormal) {
                     fireConfetti('normal');
@@ -377,20 +501,19 @@
             const ectsDesc = document.getElementById('ects-desc');
             const motv = document.getElementById('motivational-msg');
             
-            if(ectsEq) ectsEq.innerText = letter;
-            if(ectsDesc) ectsDesc.innerText = desc;
-            if(motv) motv.innerText = motivationMsg;
+            if (ectsEq) ectsEq.innerText = letter;
+            if (ectsDesc) ectsDesc.innerText = desc;
+            if (motv) motv.innerText = motivationMsg;
         }
 
         function copySummary() {
             const gradeEl = document.getElementById('final-grade');
             const letterEl = document.getElementById('ects-equivalent');
             
-            if(!gradeEl || !letterEl) return;
+            if (!gradeEl || !letterEl) return;
             
             const text = `📊 Mi Media: ${gradeEl.innerText}/10\nEquivalencia ECTS: ${letterEl.innerText}\nCalculado en CalcuMedia Uni.`;
             navigator.clipboard.writeText(text).then(() => alert(i18n[currentLang].copied));
-            // SENSOR INYECTADO: copiar_resumen
             registrarEvento('copiar_resumen');
         }
 
@@ -398,7 +521,7 @@
         
         function updateFabVisibility() {
             const fab = document.getElementById('btn-scroll-top');
-            if(!fab) return;
+            if (!fab) return;
             
             if (window.scrollY > 50 || isInputFocused) {
                 fab.classList.remove('opacity-0', 'pointer-events-none');
@@ -425,7 +548,6 @@
             }
         });
 
-        // INICIALIZACIÓN SEGURA: Arrancar la web cuando cargue del todo
         window.onload = function() {
             addRow(); 
             addRow();
