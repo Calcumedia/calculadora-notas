@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "node --test",
-    "check": "node --check app.js && node --check calculator-core.mjs && node --check analytics-core.mjs && node --test"
+    "check": "node --check app.js && node --check cookie-policy.js && node --check calculator-core.mjs && node --check analytics-core.mjs && node --test"
   },
   "engines": {
     "node": ">=20"

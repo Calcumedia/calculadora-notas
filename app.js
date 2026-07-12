@@ -1,4 +1,8 @@
-import { calculateWeightedAverage } from './calculator-core.mjs';
+import {
+  calculateWeightedAverage,
+  MAX_CREDITS_PER_ROW,
+  MAX_TOTAL_CREDITS,
+} from './calculator-core.mjs';
 import { createSafeAnalyticsEvent } from './analytics-core.mjs';
 
 const ANALYTICS_ID = 'G-RJ2WS9XR5F';
@@ -36,13 +40,13 @@ const translations = {
     reviewDetail: 'No mostramos una media provisional para evitar confusiones.',
     initialMessage: 'Introduce tus asignaturas para empezar.',
     readyMessage: 'Tu media ponderada está lista.',
-    reviewMessage: 'Completa o corrige las filas marcadas.',
+    reviewMessage: 'Completa o corrige los datos indicados.',
     subjectsTitle: 'Asignaturas incluidas',
     addSubject: 'Añadir asignatura',
     copySummary: 'Copiar resumen',
     copied: 'Resumen copiado',
     clearAll: 'Limpiar todo',
-    warning: 'Revisa las filas marcadas. Cada fila iniciada necesita una nota entre 0 y 10 y créditos superiores a 0.',
+    warning: 'Revisa los datos. Cada fila iniciada necesita una nota entre 0 y 10 y entre más de 0 y ' + MAX_CREDITS_PER_ROW + ' créditos. El total técnico no puede superar ' + MAX_TOTAL_CREDITS + ' créditos.',
     subject: 'Asignatura',
     grade: 'Nota',
     subjectPlaceholder: 'Ej.: Estadística',
@@ -50,7 +54,7 @@ const translations = {
     creditsPlaceholder: '6',
     subjectLabel: 'Nombre de la asignatura',
     gradeLabel: 'Nota entre 0 y 10',
-    creditsLabel: 'Créditos ECTS superiores a 0',
+    creditsLabel: 'Créditos ECTS superiores a 0 y hasta ' + MAX_CREDITS_PER_ROW,
     removeLabel: 'Eliminar asignatura',
     privacyTitle: 'Tus datos se quedan aquí.',
     privacyText: ' Las notas, los créditos y los nombres de asignatura no se envían a CalcuMedia ni a Google Analytics.',
@@ -74,6 +78,8 @@ const translations = {
     faq3q: '¿Puedo usar el resultado en una solicitud oficial?',
     faq3a: 'Puedes usarlo como comprobación personal. Para solicitudes oficiales debes seguir las reglas y documentos exigidos por la universidad o entidad convocante.',
     cookieSettings: 'Preferencias de analítica',
+    cookieMore: 'Más información',
+    cookiePolicy: 'Política de cookies',
     consentTitle: 'Analítica opcional',
     consentText: 'Podemos medir visitas y clics para mejorar la herramienta. No enviamos tus notas, créditos ni asignaturas. Puedes aceptar o rechazar con la misma facilidad.',
     reject: 'Rechazar',
@@ -106,13 +112,13 @@ const translations = {
     reviewDetail: 'We hide provisional averages to avoid confusion.',
     initialMessage: 'Enter your subjects to begin.',
     readyMessage: 'Your weighted average is ready.',
-    reviewMessage: 'Complete or correct the highlighted rows.',
+    reviewMessage: 'Complete or correct the indicated data.',
     subjectsTitle: 'Included subjects',
     addSubject: 'Add subject',
     copySummary: 'Copy summary',
     copied: 'Summary copied',
     clearAll: 'Clear all',
-    warning: 'Check the highlighted rows. Every started row needs a grade from 0 to 10 and credits greater than 0.',
+    warning: 'Check the data. Every started row needs a grade from 0 to 10 and more than 0 up to ' + MAX_CREDITS_PER_ROW + ' credits. The technical total cannot exceed ' + MAX_TOTAL_CREDITS + ' credits.',
     subject: 'Subject',
     grade: 'Grade',
     subjectPlaceholder: 'e.g. Statistics',
@@ -120,7 +126,7 @@ const translations = {
     creditsPlaceholder: '6',
     subjectLabel: 'Subject name',
     gradeLabel: 'Grade from 0 to 10',
-    creditsLabel: 'ECTS credits greater than 0',
+    creditsLabel: 'ECTS credits greater than 0 and up to ' + MAX_CREDITS_PER_ROW,
     removeLabel: 'Remove subject',
     privacyTitle: 'Your data stays here.',
     privacyText: ' Grades, credits and subject names are not sent to CalcuMedia or Google Analytics.',
@@ -144,6 +150,8 @@ const translations = {
     faq3q: 'Can I use this result in an official application?',
     faq3a: 'Use it as a personal check. For official applications, follow the rules and documents required by the university or awarding body.',
     cookieSettings: 'Analytics preferences',
+    cookieMore: 'More information',
+    cookiePolicy: 'Cookie policy',
     consentTitle: 'Optional analytics',
     consentText: 'We can measure visits and clicks to improve this tool. We do not send grades, credits or subject names. Accepting and rejecting are equally easy.',
     reject: 'Reject',
@@ -318,6 +326,9 @@ function applyLanguage() {
     if (typeof value === 'string') element.textContent = value;
   });
   document.querySelectorAll('.subject-row').forEach(updateRowLanguage);
+  const policyHref = 'politica-cookies.html?lang=' + state.language;
+  elements.cookieMore.href = policyHref;
+  elements.cookiePolicy.href = policyHref;
   elements.brand.setAttribute('aria-label', t('brandLabel'));
   elements.language.setAttribute('aria-label', t('languageLabel'));
   elements.formula.setAttribute('aria-label', t('formulaLabel'));
@@ -486,6 +497,8 @@ function cacheElements() {
   elements.consent = document.getElementById('analytics-consent');
   elements.accept = document.getElementById('accept-analytics');
   elements.reject = document.getElementById('reject-analytics');
+  elements.cookieMore = document.getElementById('cookie-more-link');
+  elements.cookiePolicy = document.getElementById('cookie-policy-link');
 }
 
 function bindEvents() {

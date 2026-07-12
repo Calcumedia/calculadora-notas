@@ -17,11 +17,13 @@ Estas reglas se aplican a cualquier cambio realizado por Codex o por otro colabo
 - Aceptar y rechazar la analítica deben tener la misma visibilidad y facilidad de uso.
 - Todo evento de Analytics debe pasar por la lista cerrada de eventos y parámetros de analytics-core.mjs.
 - La calculadora debe seguir funcionando aunque el almacenamiento local o Analytics no estén disponibles.
+- No inventar razón social, identidad, dirección, correo ni ningún otro dato legal. Si falta información pública, indicarlo claramente para que el titular la complete antes de publicar cuando corresponda.
 
 ## Código y calidad
 
 - La lógica de cálculo de producción debe usar calculator-core.mjs; no duplicarla dentro de la interfaz.
 - Una fila totalmente vacía se ignora. Cualquier fila iniciada, incompleta o inválida bloquea el resultado definitivo.
+- Los máximos de 120 créditos por fila y 1.200 en total son protecciones técnicas, no reglas académicas. No modificarlos sin pruebas de límites y operaciones finitas.
 - Mantener separados estructura (index.html), presentación (styles.css) y comportamiento (app.js).
 - No usar Tailwind Play CDN ni dependencias declaradas solo para desarrollo en producción.
 - Conservar navegación por teclado, etiquetas accesibles, mensajes de error comprensibles y prefers-reduced-motion.

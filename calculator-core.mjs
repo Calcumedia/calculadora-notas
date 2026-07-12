@@ -1,3 +1,37 @@
+// Technical safety limits only. They are not academic or institutional rules.
+export const MAX_CREDITS_PER_ROW = 120;
+export const MAX_TOTAL_CREDITS = 1200;
+
+function totalCreditsTolerance(value) {
+  return Number.EPSILON * Math.max(Math.abs(value), MAX_TOTAL_CREDITS) * 16;
+}
+
+function exceedsTotalCreditsLimit(value) {
+  return value - MAX_TOTAL_CREDITS > totalCreditsTolerance(value);
+}
+
+function normalizeTotalCredits(value) {
+  return Math.abs(value - MAX_TOTAL_CREDITS) <= totalCreditsTolerance(value)
+    ? MAX_TOTAL_CREDITS
+    : value;
+}
+
+export function finiteProduct(left, right) {
+  const result = left * right;
+  return Number.isFinite(result) ? result : null;
+}
+
+export function finiteSum(left, right) {
+  const result = left + right;
+  return Number.isFinite(result) ? result : null;
+}
+
+export function finiteQuotient(numerator, denominator) {
+  if (!Number.isFinite(denominator) || denominator <= 0) return null;
+  const result = numerator / denominator;
+  return Number.isFinite(result) ? result : null;
+}
+
 export function parseAcademicNumber(value) {
   const normalized = String(value ?? '').trim().replace(',', '.');
   if (normalized === '') return Number.NaN;
@@ -25,7 +59,11 @@ export function validateAcademicRow(row) {
   const credits = parseAcademicNumber(creditsText);
   const errors = {
     grade: gradeText === '' || !Number.isFinite(grade) || grade < 0 || grade > 10,
-    credits: creditsText === '' || !Number.isFinite(credits) || credits <= 0,
+    credits:
+      creditsText === '' ||
+      !Number.isFinite(credits) ||
+      credits <= 0 ||
+      credits > MAX_CREDITS_PER_ROW,
   };
 
   return {
@@ -63,15 +101,48 @@ export function calculateWeightedAverage(rows) {
     };
   }
 
-  const totalCredits = startedRows.reduce((sum, row) => sum + row.credits, 0);
-  const weightedTotal = startedRows.reduce(
-    (sum, row) => sum + row.grade * row.credits,
-    0,
-  );
+  let totalCredits = 0;
+  let weightedTotal = 0;
+
+  for (const row of startedRows) {
+    const weightedValue = finiteProduct(row.grade, row.credits);
+    const nextTotalCredits = finiteSum(totalCredits, row.credits);
+    const nextWeightedTotal =
+      weightedValue === null ? null : finiteSum(weightedTotal, weightedValue);
+
+    if (
+      weightedValue === null ||
+      nextTotalCredits === null ||
+      nextWeightedTotal === null ||
+      exceedsTotalCreditsLimit(nextTotalCredits)
+    ) {
+      return {
+        status: 'invalid',
+        average: null,
+        totalCredits: 0,
+        completedRows: startedRows.length,
+        rows: validatedRows,
+      };
+    }
+
+    totalCredits = normalizeTotalCredits(nextTotalCredits);
+    weightedTotal = nextWeightedTotal;
+  }
+
+  const average = finiteQuotient(weightedTotal, totalCredits);
+  if (average === null) {
+    return {
+      status: 'invalid',
+      average: null,
+      totalCredits: 0,
+      completedRows: startedRows.length,
+      rows: validatedRows,
+    };
+  }
 
   return {
     status: 'valid',
-    average: weightedTotal / totalCredits,
+    average,
     totalCredits,
     completedRows: startedRows.length,
     rows: validatedRows,

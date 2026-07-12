@@ -5,14 +5,17 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const [index, app, calculator, analytics, styles] = await Promise.all([
+const [index, app, calculator, analytics, styles, policy, policyScript] = await Promise.all([
   readFile(resolve(root, 'index.html'), 'utf8'),
   readFile(resolve(root, 'app.js'), 'utf8'),
   readFile(resolve(root, 'calculator-core.mjs'), 'utf8'),
   readFile(resolve(root, 'analytics-core.mjs'), 'utf8'),
   readFile(resolve(root, 'styles.css'), 'utf8'),
+  readFile(resolve(root, 'politica-cookies.html'), 'utf8'),
+  readFile(resolve(root, 'cookie-policy.js'), 'utf8'),
 ]);
-const productionSource = index + '\n' + app + '\n' + calculator + '\n' + analytics;
+const productionSource =
+  index + '\n' + app + '\n' + calculator + '\n' + analytics + '\n' + policy + '\n' + policyScript;
 
 test('la interfaz usa el mismo motor matemático que las pruebas', () => {
   assert.match(
@@ -21,7 +24,7 @@ test('la interfaz usa el mismo motor matemático que las pruebas', () => {
   );
   assert.match(
     app,
-    /import\s*\{\s*calculateWeightedAverage\s*\}\s*from\s*['"]\.\/calculator-core\.mjs['"]/,
+    /import\s*\{[\s\S]*?calculateWeightedAverage[\s\S]*?\}\s*from\s*['"]\.\/calculator-core\.mjs['"]/,
   );
   assert.match(app, /calculateWeightedAverage\s*\(\s*rows\s*\)/);
   assert.doesNotMatch(app, /function parseNumber\(/);
@@ -45,12 +48,52 @@ test('no reaparecen textos ni reglas de conversión fija', () => {
 
 test('Analytics no se carga desde el HTML y usa una lista cerrada', () => {
   assert.doesNotMatch(index, /googletagmanager|gtag\(/i);
+  assert.doesNotMatch(policy, /googletagmanager|gtag\(/i);
+  assert.doesNotMatch(policyScript, /googletagmanager|gtag\(/i);
   assert.match(app, /readStorage\(STORAGE\.consent\) !== 'granted'/);
   assert.match(app, /createSafeAnalyticsEvent\(eventName, state\.language, parameters\)/);
   assert.match(analytics, /SAFE_PARAMETERS_BY_EVENT/);
   assert.doesNotMatch(analytics, /\.\.\.candidateParameters/);
   assert.equal((app.match(/window\.gtag\('event'/g) || []).length, 1);
   assert.match(app, /window\.gtag\('event', event\.name, event\.parameters\)/);
+});
+
+test('la política de cookies está enlazada desde el aviso y el pie en ambos idiomas', () => {
+  assert.match(
+    index,
+    /id="cookie-more-link"[^>]*href="politica-cookies\.html"[^>]*data-i18n="cookieMore"/,
+  );
+  assert.match(
+    index,
+    /id="cookie-policy-link"[^>]*href="politica-cookies\.html"[^>]*data-i18n="cookiePolicy"/,
+  );
+  assert.match(app, /cookieMore:\s*'Más información'/);
+  assert.match(app, /cookieMore:\s*'More information'/);
+  assert.match(app, /cookiePolicy:\s*'Política de cookies'/);
+  assert.match(app, /cookiePolicy:\s*'Cookie policy'/);
+  assert.match(app, /politica-cookies\.html\?lang=/);
+  assert.match(policyScript, /URLSearchParams\(window\.location\.search\)/);
+});
+
+test('la segunda capa describe GA4 y no contiene marcadores legales ficticios', () => {
+  assert.match(policy, /G-RJ2WS9XR5F/);
+  assert.match(policy, /<code>_ga<\/code>/);
+  assert.match(policy, /_ga_&lt;ID del contenedor&gt;/);
+  assert.match(policy, /calcumedia_analytics_consent/);
+  assert.match(policy, /support\.google\.com\/analytics\/answer\/11397207/);
+  assert.match(policy, /developers\.google\.com\/tag-platform\/security\/concepts\/consent-mode/);
+  assert.match(policy, /no se ha localizado una razón social/i);
+  assert.match(policy, /No legal company name[^.]*was found/i);
+  assert.equal((policy.match(/class="policy-table-wrap" tabindex="0"/g) || []).length, 2);
+  assert.doesNotMatch(policy, /TODO|PENDIENTE|TBD|INSERTAR|NOMBRE AQU[IÍ]/i);
+});
+
+test('los límites técnicos y las operaciones finitas quedan protegidos', () => {
+  assert.match(calculator, /MAX_CREDITS_PER_ROW\s*=\s*120/);
+  assert.match(calculator, /MAX_TOTAL_CREDITS\s*=\s*1200/);
+  assert.match(calculator, /Number\.isFinite\(result\)/);
+  assert.match(app, /MAX_CREDITS_PER_ROW/);
+  assert.match(app, /MAX_TOTAL_CREDITS/);
 });
 
 test('aceptar y rechazar tienen exactamente la misma clase visual', () => {

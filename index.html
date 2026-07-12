@@ -110,7 +110,7 @@
           <button id="clear-all" class="button danger" type="button" data-i18n="clearAll">Limpiar todo</button>
         </div>
 
-        <div id="input-warning" class="warning" role="status" aria-live="polite" hidden data-i18n="warning">Revisa las filas marcadas. Cada fila iniciada necesita una nota entre 0 y 10 y créditos superiores a 0.</div>
+        <div id="input-warning" class="warning" role="status" aria-live="polite" hidden data-i18n="warning">Revisa los datos. Cada fila iniciada necesita una nota entre 0 y 10 y entre más de 0 y 120 créditos. El total técnico no puede superar 1.200 créditos.</div>
 
         <div class="table-head" aria-hidden="true">
           <span data-i18n="subject">Asignatura</span>
@@ -173,15 +173,22 @@
     </main>
 
     <footer>
-      <p>© 2026 CalcuMedia Uni · <button id="cookie-settings" class="text-button" type="button" data-i18n="cookieSettings">Preferencias de analítica</button></p>
+      <p class="footer-links">
+        <span>© 2026 CalcuMedia Uni</span>
+        <span aria-hidden="true">·</span>
+        <button id="cookie-settings" class="text-button" type="button" data-i18n="cookieSettings">Preferencias de analítica</button>
+        <span aria-hidden="true">·</span>
+        <a id="cookie-policy-link" class="text-link" href="politica-cookies.html" data-i18n="cookiePolicy">Política de cookies</a>
+      </p>
     </footer>
   </div>
 
   <aside id="analytics-consent" class="consent" role="region" aria-labelledby="consent-title" hidden>
     <div class="consent-row">
-      <div>
+      <div class="consent-copy">
         <strong id="consent-title" data-i18n="consentTitle">Analítica opcional</strong>
         <p data-i18n="consentText">Podemos medir visitas y clics para mejorar la herramienta. No enviamos tus notas, créditos ni asignaturas. Puedes aceptar o rechazar con la misma facilidad.</p>
+        <a id="cookie-more-link" class="consent-info-link" href="politica-cookies.html" data-i18n="cookieMore">Más información</a>
       </div>
       <div class="consent-actions">
         <button id="reject-analytics" class="button consent-choice" type="button" data-i18n="reject">Rechazar</button>

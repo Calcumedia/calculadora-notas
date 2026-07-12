@@ -43,7 +43,7 @@
     button, input, select { font: inherit; }
     button, select { cursor: pointer; }
     a { color: inherit; }
-    a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-visible {
+    a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-visible, [tabindex]:focus-visible {
       outline: 3px solid color-mix(in srgb, var(--brand) 55%, white);
       outline-offset: 3px;
     }
@@ -121,10 +121,43 @@
     .faq-item p { color: var(--muted); margin-bottom: 0; }
     footer { text-align: center; color: var(--muted); margin-top: 36px; font-size: .9rem; }
     .text-button { border: 0; padding: 2px 3px; background: transparent; color: var(--brand); text-decoration: underline; }
+    .text-link { color: var(--brand); }
+    .footer-links { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; }
     .consent { position: fixed; left: 14px; right: 14px; bottom: 14px; z-index: 100; max-width: 780px; margin: 0 auto; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 18px; box-shadow: 0 20px 70px rgba(0,0,0,.26); padding: 17px; }
     .consent-row { display: flex; gap: 14px; align-items: center; justify-content: space-between; }
+    .consent-copy { flex: 1 1 auto; }
     .consent p { margin: 0; color: var(--muted); font-size: .9rem; }
+    .consent-info-link { display: inline-block; margin-top: 7px; color: var(--brand); font-weight: 800; }
     .consent-actions { display: flex; gap: 8px; flex: 0 1 300px; }
+    .policy-page { width: min(900px, calc(100% - 28px)); }
+    .policy-shell { display: block; }
+    .policy-hero { text-align: center; margin: 22px auto 30px; max-width: 760px; }
+    .policy-hero h1 { margin-bottom: 10px; }
+    .policy-hero p { margin: 0; color: var(--muted); }
+    .policy-content { display: grid; gap: 16px; }
+    .policy-content section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 24px;
+    }
+    .policy-content h2 { margin: 0 0 12px; line-height: 1.25; }
+    .policy-content p, .policy-content li { color: var(--muted); }
+    .policy-content a { color: var(--brand); }
+    .policy-content code {
+      border-radius: 7px;
+      background: var(--surface-soft);
+      color: var(--text);
+      padding: 2px 6px;
+      overflow-wrap: anywhere;
+    }
+    .policy-table-wrap { overflow-x: auto; margin: 16px 0; }
+    .policy-content table { width: 100%; min-width: 620px; border-collapse: collapse; }
+    .policy-content th, .policy-content td { padding: 12px; border: 1px solid var(--border); text-align: left; vertical-align: top; }
+    .policy-content th { background: var(--surface-soft); color: var(--text); }
+    .policy-back { display: inline-block; margin-top: 22px; text-decoration: none; }
+    .source-list { padding-left: 22px; }
     .visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
     [hidden] { display: none !important; }
     @media (max-width: 680px) {
@@ -144,6 +177,9 @@
       .consent-row { align-items: stretch; flex-direction: column; }
       .consent-actions { justify-content: stretch; flex-basis: auto; }
       .consent-actions .button { flex: 1; }
+      .policy-page { width: min(100% - 18px, 900px); }
+      .policy-content section { padding: 19px 16px; border-radius: 17px; }
+      .policy-hero { margin-top: 14px; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }

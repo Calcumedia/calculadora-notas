@@ -3,6 +3,11 @@ import assert from 'node:assert/strict';
 
 import {
   calculateWeightedAverage,
+  finiteProduct,
+  finiteQuotient,
+  finiteSum,
+  MAX_CREDITS_PER_ROW,
+  MAX_TOTAL_CREDITS,
   parseAcademicNumber,
   validateAcademicRow,
 } from '../calculator-core.mjs';
@@ -113,4 +118,103 @@ test('una fila inválida impide mostrar una media parcial de otras filas', () =>
   assert.equal(result.status, 'invalid');
   assert.equal(result.average, null);
   assert.equal(result.totalCredits, 0);
+});
+
+test('rechaza créditos superiores al máximo técnico por fila', () => {
+  const boundary = calculateWeightedAverage([
+    { grade: '8', credits: String(MAX_CREDITS_PER_ROW) },
+  ]);
+  assert.equal(boundary.status, 'valid');
+
+  const result = calculateWeightedAverage([
+    { grade: '8', credits: String(MAX_CREDITS_PER_ROW + 0.01) },
+  ]);
+  assert.equal(result.status, 'invalid');
+  assert.equal(result.average, null);
+});
+
+test('rechaza un total de créditos superior al máximo técnico', () => {
+  const rowsAtBoundary = Array.from(
+    { length: MAX_TOTAL_CREDITS / MAX_CREDITS_PER_ROW },
+    () => ({ grade: '8', credits: String(MAX_CREDITS_PER_ROW) }),
+  );
+  const boundary = calculateWeightedAverage(rowsAtBoundary);
+  assert.equal(boundary.status, 'valid');
+  assert.equal(boundary.totalCredits, MAX_TOTAL_CREDITS);
+
+  const result = calculateWeightedAverage([
+    ...rowsAtBoundary,
+    { grade: '8', credits: '1' },
+  ]);
+  assert.equal(result.status, 'invalid');
+  assert.equal(result.average, null);
+  assert.equal(result.totalCredits, 0);
+  assert.equal(result.rows.every((row) => row.valid), true);
+});
+
+test('rechaza valores capaces de convertirse en Infinity o -Infinity', () => {
+  for (const row of [
+    { grade: '1e309', credits: '6' },
+    { grade: '-1e309', credits: '6' },
+    { grade: '8', credits: '1e309' },
+    { grade: '8', credits: '-1e309' },
+  ]) {
+    const result = calculateWeightedAverage([row]);
+    assert.equal(result.status, 'invalid');
+    assert.equal(result.average, null);
+  }
+});
+
+test('nunca devuelve productos, sumas o resultados no finitos', () => {
+  const result = calculateWeightedAverage([
+    { grade: '1e309', credits: '1e309' },
+    { grade: 'NaN', credits: '120' },
+  ]);
+  assert.equal(result.status, 'invalid');
+  assert.equal(result.average, null);
+  assert.equal(Number.isFinite(result.totalCredits), true);
+});
+
+test('las operaciones defensivas rechazan desbordamientos y divisiones inválidas', () => {
+  assert.equal(finiteProduct(Number.MAX_VALUE, 2), null);
+  assert.equal(finiteProduct(Number.NaN, 2), null);
+  assert.equal(finiteSum(Number.MAX_VALUE, Number.MAX_VALUE), null);
+  assert.equal(finiteSum(Number.POSITIVE_INFINITY, 1), null);
+  assert.equal(finiteQuotient(Number.MAX_VALUE, Number.MIN_VALUE), null);
+  assert.equal(finiteQuotient(10, 0), null);
+  assert.equal(finiteQuotient(10, Number.NaN), null);
+
+  assert.equal(finiteProduct(8, 6), 48);
+  assert.equal(finiteSum(48, 18), 66);
+  assert.equal(finiteQuotient(66, 9), 66 / 9);
+});
+
+test('el máximo técnico sigue produciendo un resultado finito', () => {
+  const result = calculateWeightedAverage(
+    Array.from(
+      { length: MAX_TOTAL_CREDITS / MAX_CREDITS_PER_ROW },
+      () => ({ grade: '10', credits: String(MAX_CREDITS_PER_ROW) }),
+    ),
+  );
+  assert.equal(result.status, 'valid');
+  assert.equal(result.average, 10);
+  assert.equal(Number.isFinite(result.average), true);
+  assert.equal(Number.isFinite(result.totalCredits), true);
+});
+
+test('no confunde el redondeo binario decimal con un exceso del límite total', () => {
+  const exactBoundary = calculateWeightedAverage([
+    ...Array.from({ length: 10 }, () => ({ grade: '8', credits: '108.2' })),
+    { grade: '8', credits: '118' },
+  ]);
+  assert.equal(exactBoundary.status, 'valid');
+  assert.equal(exactBoundary.totalCredits, MAX_TOTAL_CREDITS);
+  assert.equal(exactBoundary.average.toFixed(2), '8.00');
+
+  const actualExcess = calculateWeightedAverage([
+    ...Array.from({ length: 10 }, () => ({ grade: '8', credits: '108.2' })),
+    { grade: '8', credits: '118.000001' },
+  ]);
+  assert.equal(actualExcess.status, 'invalid');
+  assert.equal(actualExcess.average, null);
 });
