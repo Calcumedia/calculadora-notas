@@ -96,6 +96,12 @@ test('los límites técnicos y las operaciones finitas quedan protegidos', () =>
   assert.match(app, /MAX_TOTAL_CREDITS/);
 });
 
+test('la tabla de cookies no ensancha la página móvil', () => {
+  assert.match(styles, /\.policy-content\s*\{[^}]*min-width:\s*0/);
+  assert.match(styles, /\.policy-content section\s*\{[^}]*min-width:\s*0/);
+  assert.match(styles, /\.policy-table-wrap\s*\{[^}]*max-width:\s*100%[^}]*min-width:\s*0/);
+});
+
 test('aceptar y rechazar tienen exactamente la misma clase visual', () => {
   const reject = index.match(/<button id="reject-analytics"([^>]*)>/);
   const accept = index.match(/<button id="accept-analytics"([^>]*)>/);
