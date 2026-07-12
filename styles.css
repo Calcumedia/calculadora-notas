@@ -43,6 +43,10 @@
     button, input, select { font: inherit; }
     button, select { cursor: pointer; }
     a { color: inherit; }
+    a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--brand) 55%, white);
+      outline-offset: 3px;
+    }
     .page { width: min(940px, calc(100% - 28px)); margin: 0 auto; padding: 24px 0 120px; }
     .topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 34px; }
     .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 850; text-decoration: none; }
@@ -76,8 +80,16 @@
     .button { border: 0; border-radius: 13px; padding: 12px 16px; font-weight: 800; transition: transform .15s ease, filter .15s ease; }
     .button:hover { filter: brightness(1.03); }
     .button:active { transform: translateY(1px); }
-    .button.primary { background: var(--brand); color: white; flex: 1 1 220px; }
+    .button.primary { background: var(--brand); color: white; }
+    .toolbar .button.primary { flex: 1 1 220px; }
     .button.secondary { background: var(--surface-soft); color: var(--text); }
+    .button.consent-choice {
+      flex: 1 1 140px;
+      min-width: 120px;
+      border: 1px solid var(--border);
+      background: var(--surface-soft);
+      color: var(--text);
+    }
     .button.danger { background: transparent; color: var(--danger); border: 1px solid color-mix(in srgb, var(--danger) 35%, transparent); }
     .button:disabled { opacity: .45; cursor: not-allowed; }
     .warning { background: var(--warning-bg); color: var(--warning); border-radius: 14px; padding: 12px 14px; margin-bottom: 16px; font-weight: 700; }
@@ -99,6 +111,8 @@
     .related-card { background: linear-gradient(135deg, var(--brand), #766cf0); color: white; border: 0; }
     .related-card p { color: rgba(255,255,255,.86); }
     .related-link { display: inline-block; margin-top: 8px; padding: 11px 14px; background: white; color: #342c9e; text-decoration: none; border-radius: 12px; font-weight: 850; }
+    .amazon-button { display: inline-block; background: #ffca28; color: #241a00; text-decoration: none; }
+    .small-print { font-size: .78rem; }
     .faq { margin-top: 30px; }
     .faq h2 { text-align: center; }
     .faq-list { display: grid; gap: 12px; }
@@ -106,10 +120,11 @@
     .faq-item summary { font-weight: 850; }
     .faq-item p { color: var(--muted); margin-bottom: 0; }
     footer { text-align: center; color: var(--muted); margin-top: 36px; font-size: .9rem; }
+    .text-button { border: 0; padding: 2px 3px; background: transparent; color: var(--brand); text-decoration: underline; }
     .consent { position: fixed; left: 14px; right: 14px; bottom: 14px; z-index: 100; max-width: 780px; margin: 0 auto; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 18px; box-shadow: 0 20px 70px rgba(0,0,0,.26); padding: 17px; }
     .consent-row { display: flex; gap: 14px; align-items: center; justify-content: space-between; }
     .consent p { margin: 0; color: var(--muted); font-size: .9rem; }
-    .consent-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .consent-actions { display: flex; gap: 8px; flex: 0 1 300px; }
     .visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
     [hidden] { display: none !important; }
     @media (max-width: 680px) {
@@ -127,7 +142,7 @@
       .field { padding: 10px 6px; }
       .cards { grid-template-columns: 1fr; }
       .consent-row { align-items: stretch; flex-direction: column; }
-      .consent-actions { justify-content: stretch; }
+      .consent-actions { justify-content: stretch; flex-basis: auto; }
       .consent-actions .button { flex: 1; }
     }
     @media (prefers-reduced-motion: reduce) {

@@ -4,16 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Calculadora de nota media universitaria ponderada por ECTS</title>
-  <meta name="description" content="Calcula gratis tu nota media universitaria ponderada por créditos ECTS. Resultado claro, sin equivalencias académicas inventadas y con tus datos dentro del navegador.">
+  <meta id="meta-description" name="description" content="Calcula gratis tu nota media universitaria ponderada por créditos ECTS. Resultado claro, privado y adaptado a móvil.">
   <link rel="canonical" href="https://calcumedia.github.io/calculadora-notas/">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://calcumedia.github.io/calculadora-notas/">
-  <meta property="og:title" content="Calculadora de nota media universitaria">
-  <meta property="og:description" content="Calcula tu media ponderada por créditos ECTS de forma gratuita y clara.">
+  <meta id="og-title" property="og:title" content="Calculadora de nota media universitaria">
+  <meta id="og-description" property="og:description" content="Calcula tu media ponderada por créditos ECTS de forma gratuita y clara.">
   <meta property="og:image" content="https://calcumedia.github.io/calculadora-notas/portada.jpeg">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Calculadora de nota media universitaria">
-  <meta name="twitter:description" content="Calcula tu media ponderada por créditos ECTS de forma gratuita y clara.">
+  <meta id="twitter-title" name="twitter:title" content="Calculadora de nota media universitaria">
+  <meta id="twitter-description" name="twitter:description" content="Calcula tu media ponderada por créditos ECTS de forma gratuita y clara.">
   <meta name="twitter:image" content="https://calcumedia.github.io/calculadora-notas/portada.jpeg">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
   <link rel="stylesheet" href="styles.css">
@@ -56,12 +56,12 @@
     ]
   }
   </script>
-  <script src="app.js" defer></script>
+  <script src="app.js" type="module"></script>
 </head>
 <body>
   <div class="page">
     <header class="topbar">
-      <a class="brand" href="https://calcumedia.github.io/herramientas/" aria-label="Volver a CalcuMedia Uni">
+      <a id="brand-link" class="brand" href="https://calcumedia.github.io/herramientas/" aria-label="Volver a CalcuMedia Uni">
         <span class="brand-mark" aria-hidden="true">C</span>
         <span class="brand-text">CalcuMedia Uni</span>
       </a>
@@ -71,7 +71,7 @@
           <option value="es">🇪🇸 ES</option>
           <option value="en">🇬🇧 EN</option>
         </select>
-        <button id="theme-toggle" class="control icon-button" type="button" aria-label="Cambiar modo claro u oscuro">🌙</button>
+        <button id="theme-toggle" class="control icon-button" type="button" aria-label="Activar modo oscuro" aria-pressed="false">🌙</button>
       </div>
     </header>
 
@@ -79,13 +79,13 @@
       <section class="hero" aria-labelledby="main-title">
         <div class="eyebrow" data-i18n="eyebrow">Herramienta universitaria gratuita</div>
         <h1 id="main-title" data-i18n="title">Calculadora de nota media</h1>
-        <p data-i18n="subtitle">Calcula tu media ponderada usando la nota y los créditos ECTS de cada asignatura. Sin convertirla a una escala europea universal que no existe.</p>
+        <p data-i18n="subtitle">Calcula tu media ponderada usando la nota y los créditos ECTS de cada asignatura. Los créditos se utilizan únicamente como peso en el cálculo.</p>
       </section>
 
       <section class="result-card" aria-labelledby="result-title">
         <h2 id="result-title" class="visually-hidden" data-i18n="resultTitle">Resultado del cálculo</h2>
         <div class="result-grid">
-          <div class="result-panel">
+          <div id="status-panel" class="result-panel" role="status" aria-live="polite" aria-atomic="true">
             <span class="result-label" data-i18n="weightedLabel">Nota media ponderada</span>
             <div class="grade-line" aria-live="polite">
               <span id="final-grade" class="grade">—</span>
@@ -130,7 +130,7 @@
         <article class="info-card">
           <h2 data-i18n="methodTitle">Qué calcula exactamente</h2>
           <p data-i18n="methodText">La herramienta aplica una media ponderada: las asignaturas con más créditos tienen más peso en el resultado.</p>
-          <div class="formula" aria-label="Fórmula de la media ponderada">Σ (nota × ECTS) ÷ Σ ECTS</div>
+          <div id="formula" class="formula" aria-label="Fórmula de la media ponderada">Σ (nota × ECTS) ÷ Σ ECTS</div>
           <p data-i18n="officialNote">El resultado es matemático, no una certificación oficial. Revisa las reglas de tu universidad, beca o convocatoria.</p>
         </article>
 
@@ -148,8 +148,8 @@
         </article>
 
         <article class="info-card">
-          <h2 data-i18n="limitsTitle">Límites importantes</h2>
-          <p data-i18n="limitsText">No convertimos automáticamente tu resultado a letras ECTS, GPA u otras escalas. Esas conversiones dependen del sistema, la institución y, en ocasiones, de tablas de distribución concretas.</p>
+          <h2 data-i18n="limitsTitle">Cómo interpretar el resultado</h2>
+          <p data-i18n="limitsText">La media se muestra sobre 10. Para un trámite oficial, comprueba qué asignaturas, reconocimientos y reglas de redondeo aplica la institución correspondiente.</p>
         </article>
       </div>
 
@@ -161,8 +161,8 @@
             <p data-i18n="faq1a">Porque representan el peso o carga de cada asignatura. Una materia de 12 ECTS influye el doble que una de 6 ECTS en esta media.</p>
           </details>
           <details class="faq-item">
-            <summary data-i18n="faq2q">¿Por qué ya no aparece una letra A, B, C, D, E o F?</summary>
-            <p data-i18n="faq2a">Porque no existe una tabla universal vigente que permita convertir cualquier nota de 0 a 10 directamente a una letra ECTS. Mostrarla podría inducir a error.</p>
+            <summary data-i18n="faq2q">¿Qué filas se incluyen en el cálculo?</summary>
+            <p data-i18n="faq2a">Se incluyen las filas que tienen nota y créditos válidos. Las filas totalmente vacías se ignoran; si empiezas una fila, debes completarla antes de obtener el resultado.</p>
           </details>
           <details class="faq-item">
             <summary data-i18n="faq3q">¿Puedo usar el resultado en una solicitud oficial?</summary>
@@ -177,15 +177,15 @@
     </footer>
   </div>
 
-  <aside id="analytics-consent" class="consent" aria-labelledby="consent-title" hidden>
+  <aside id="analytics-consent" class="consent" role="region" aria-labelledby="consent-title" hidden>
     <div class="consent-row">
       <div>
         <strong id="consent-title" data-i18n="consentTitle">Analítica opcional</strong>
         <p data-i18n="consentText">Podemos medir visitas y clics para mejorar la herramienta. No enviamos tus notas, créditos ni asignaturas. Puedes aceptar o rechazar con la misma facilidad.</p>
       </div>
       <div class="consent-actions">
-        <button id="reject-analytics" class="button secondary" type="button" data-i18n="reject">Rechazar</button>
-        <button id="accept-analytics" class="button primary" type="button" data-i18n="accept">Aceptar</button>
+        <button id="reject-analytics" class="button consent-choice" type="button" data-i18n="reject">Rechazar</button>
+        <button id="accept-analytics" class="button consent-choice" type="button" data-i18n="accept">Aceptar</button>
       </div>
     </div>
   </aside>
