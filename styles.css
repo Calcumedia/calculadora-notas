@@ -111,8 +111,6 @@
     .related-card { background: linear-gradient(135deg, var(--brand), #766cf0); color: white; border: 0; }
     .related-card p { color: rgba(255,255,255,.86); }
     .related-link { display: inline-block; margin-top: 8px; padding: 11px 14px; background: white; color: #342c9e; text-decoration: none; border-radius: 12px; font-weight: 850; }
-    .amazon-button { display: inline-block; background: #ffca28; color: #241a00; text-decoration: none; }
-    .small-print { font-size: .78rem; }
     .faq { margin-top: 30px; }
     .faq h2 { text-align: center; }
     .faq-list { display: grid; gap: 12px; }
