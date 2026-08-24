@@ -105,7 +105,6 @@
                     fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
                     colors: {
                         brand: { 50: '#f5f7ff', 100: '#ebf0fe', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca' },
-                        amazon: '#FF9900',
                     },
                     borderRadius: { '4xl': '2rem' }
                 }
@@ -201,17 +200,6 @@
                 <a href="https://calcumedia.github.io/generador-apa/" target="_blank" rel="noopener noreferrer" onclick="registrarEvento('clic_herramienta_apa', { ubicacion: 'bloque_relacionado' })" class="w-full md:w-auto text-center bg-white text-brand-700 font-bold px-8 py-3.5 rounded-xl hover:bg-slate-100 transition" id="btn-apa">
                     Ir al generador APA
                 </a>
-            </div>
-
-            <div id="amazon-block" class="fade-in bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-lg border border-slate-100 dark:border-slate-800 flex flex-col md:flex-row items-center gap-6 mb-12">
-                <div class="bg-amazon/10 p-4 rounded-2xl text-4xl">🎁</div>
-                <div class="flex-grow text-center md:text-left">
-                    <p class="text-xs font-bold text-amazon uppercase tracking-widest mb-1" id="txt-amazon-tag">Ventaja para estudiantes</p>
-                    <h3 class="text-xl font-bold text-slate-950 dark:text-white mb-1" id="txt-amazon-title">Prime Student para apuntes, libros y entregas de última hora</h3>
-                    <p class="text-slate-600 dark:text-slate-400 text-sm" id="txt-amazon-desc">Si estás preparando becas, exámenes o trabajos, puede ayudarte con envíos rápidos, material universitario y Prime Video.</p>
-                    <p class="text-xs text-slate-400 dark:text-slate-500 mt-2" id="txt-affiliate-note">Enlace de afiliado: podemos recibir una comisión si te registras desde este enlace, sin coste adicional para ti.</p>
-                </div>
-                <a href="https://www.amazon.es/joinstudent?tag=calcumedia-21" target="_blank" rel="noopener noreferrer sponsored" onclick="registrarEvento('clic_amazon', { ubicacion: 'bloque_calculadora', destino: 'prime_student' })" class="w-full md:w-auto text-center bg-amazon text-slate-950 font-bold px-8 py-3.5 rounded-xl hover:brightness-105 transition" id="btn-amazon">Ver Prime Student</a>
             </div>
 
             <section class="max-w-3xl mx-auto px-4 mt-8 mb-12">
@@ -318,13 +306,7 @@
                 title1: "Calculadora de Nota", title2: "Media", subtitle: "Media ponderada universitaria, créditos ECTS y referencia Erasmus orientativa.",
                 labelWeighted: "Nota Media Ponderada", basedOn: "Basado en", totalEcts: "créditos ECTS totales.",
                 labelErasmus: "Equivalencia ECTS orientativa", btnAdd: "Añadir Asignatura", btnCopy: "Copiar Resumen",
-                btnClear: "Limpiar Todo", amazonTag: "Ventaja para estudiantes",
-                amazonTitle: "Prime Student para apuntes, libros y entregas de última hora", amazonDesc: "Si estás preparando becas, exámenes o trabajos, puede ayudarte con envíos rápidos, material universitario y Prime Video.",
-                amazonTagCalc: "Ya tienes tu media",
-                amazonTitleCalc: "¿Preparando becas, exámenes o entregas?",
-                amazonDescCalc: "Si estás revisando expediente, apuntes o materiales para la universidad, Prime Student puede ayudarte con envíos rápidos, libros, material universitario y Prime Video.",
-                affiliateNote: "Enlace de afiliado: podemos recibir una comisión si te registras desde este enlace, sin coste adicional para ti.",
-                btnAmazon: "Ver Prime Student", footer: "© 2026 CalcuMedia Uni. Herramienta gratuita para estudiantes.",
+                btnClear: "Limpiar Todo", footer: "© 2026 CalcuMedia Uni. Herramienta gratuita para estudiantes.",
                 headAsig: "Asignatura", headNota: "Nota", headEcts: "ECTS",
                 placeholderAsig: "Ej: Estadística", placeholderNota: "0.0", placeholderEcts: "6", copied: "¡Resumen copiado!",
                 btnFab: "Ver Nota",
@@ -358,13 +340,7 @@
                 title1: "GPA", title2: "Calculator", subtitle: "Weighted university average, ECTS credits and an indicative Erasmus reference.",
                 labelWeighted: "Weighted GPA", basedOn: "Based on", totalEcts: "total ECTS credits.",
                 labelErasmus: "Indicative ECTS equivalence", btnAdd: "Add Subject", btnCopy: "Copy Summary",
-                btnClear: "Clear All", amazonTag: "Student benefit",
-                amazonTitle: "Prime Student for notes, books and last-minute deadlines", amazonDesc: "If you are preparing grants, exams or coursework, it may help with fast shipping, university supplies and Prime Video.",
-                amazonTagCalc: "Your result is ready",
-                amazonTitleCalc: "Preparing grants, exams or coursework?",
-                amazonDescCalc: "If you are reviewing your academic record, notes or university supplies, Prime Student may help with fast shipping, books, student materials and Prime Video.",
-                affiliateNote: "Affiliate link: we may receive a commission if you sign up through this link, at no additional cost to you.",
-                btnAmazon: "View Prime Student", footer: "© 2026 CalcuMedia Uni. Free tool for students.",
+                btnClear: "Clear All", footer: "© 2026 CalcuMedia Uni. Free tool for students.",
                 headAsig: "Subject", headNota: "Grade", headEcts: "ECTS",
                 placeholderAsig: "e.g. Math", placeholderNota: "0.0", placeholderEcts: "6", copied: "Summary copied!",
                 btnFab: "View Grade",
@@ -470,11 +446,6 @@
             document.getElementById('btn-add').innerText = t.btnAdd;
             document.getElementById('btn-copy').innerText = t.btnCopy;
             document.getElementById('btn-clear').innerText = t.btnClear;
-            document.getElementById('txt-amazon-tag').innerText = t.amazonTag;
-            document.getElementById('txt-amazon-title').innerText = t.amazonTitle;
-            document.getElementById('txt-amazon-desc').innerText = t.amazonDesc;
-            document.getElementById('txt-affiliate-note').innerText = t.affiliateNote;
-            document.getElementById('btn-amazon').innerText = t.btnAmazon;
             document.getElementById('txt-footer').innerText = t.footer;
             document.getElementById('head-asig').innerText = t.headAsig;
             document.getElementById('head-nota').innerText = t.headNota;
@@ -614,20 +585,6 @@
             btn.setAttribute('aria-disabled', String(!valid));
         }
 
-        function updateAmazonContext(valid) {
-            const t = i18n[currentLang];
-
-            if (valid) {
-                document.getElementById('txt-amazon-tag').innerText = t.amazonTagCalc;
-                document.getElementById('txt-amazon-title').innerText = t.amazonTitleCalc;
-                document.getElementById('txt-amazon-desc').innerText = t.amazonDescCalc;
-            } else {
-                document.getElementById('txt-amazon-tag').innerText = t.amazonTag;
-                document.getElementById('txt-amazon-title').innerText = t.amazonTitle;
-                document.getElementById('txt-amazon-desc').innerText = t.amazonDesc;
-            }
-        }
-
         function registrarCalculoValido(grade, totalCredits) {
             const nota = Number(grade);
 
@@ -708,7 +665,6 @@
 
             updateInputWarning(invalidCount);
             updateCopyButtonState(calculationReady);
-            updateAmazonContext(calculationReady);
 
             if (calculationReady) {
                 registrarCalculoValido(grade, te);
@@ -869,7 +825,6 @@
             observer.observe(elemento);
         }
 
-        observarBloque('amazon-block', 'ver_bloque_amazon');
         observarBloque('apa-block', 'ver_bloque_apa');
 
         let calculadoraInicializada = false;
