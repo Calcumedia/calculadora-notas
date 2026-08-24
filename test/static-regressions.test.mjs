@@ -114,15 +114,14 @@ test('aceptar y rechazar tienen exactamente la misma clase visual', () => {
   assert.match(styles, /\.button\.consent-choice/);
 });
 
-test('se conservan accesibilidad, reducción de movimiento y enlaces de producto', () => {
+test('se conservan accesibilidad, reducción de movimiento y enlaces entre herramientas', () => {
   assert.match(app, /label\.htmlFor = id/);
   assert.match(app, /aria-describedby/);
   assert.match(styles, /prefers-reduced-motion:\s*reduce/);
   assert.doesNotMatch(index, /\son[a-z]+=/i);
   assert.match(index, /https:\/\/calcumedia\.github\.io\/generador-apa\//);
-  assert.match(index, /https:\/\/www\.amazon\.es\/joinstudent\?tag=calcumedia-21/);
-  assert.match(index, /rel="noopener noreferrer sponsored"/);
-  assert.match(index, /Enlace de afiliado/);
+  assert.doesNotMatch(index, /amazon|afiliad|prime student|calcumedia-21/i);
+  assert.doesNotMatch(app, /amazon|afiliad|prime student|calcumedia-21/i);
 });
 
 test('la versión pública no depende de Tailwind Play CDN', () => {
